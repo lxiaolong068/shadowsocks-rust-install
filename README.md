@@ -82,6 +82,39 @@ BBR 已配置完成，查看是否生效:
 
 ---
 
+## 查看 SS 链接
+
+如果您忘记了安装时生成的 `ss://` 链接，可以随时登录到服务器，运行以下命令重新生成并查看：
+
+**前提条件:** 服务器需要安装 `jq` (用于解析 JSON) 和 `curl` (用于获取 IP)。如果未安装 `jq`，请先运行 `sudo apt update && sudo apt install jq -y`。
+
+**查看链接命令:**
+```bash
+# 读取配置
+CONFIG_FILE="/etc/shadowsocks-rust/config.json"
+SS_PORT=$(jq -r '.server_port' $CONFIG_FILE)
+SS_PASSWORD=$(jq -r '.password' $CONFIG_FILE)
+SS_METHOD=$(jq -r '.method' $CONFIG_FILE)
+
+# 获取公网 IP
+PUBLIC_IP=$(curl -s https://api.ipify.org || curl -s ifconfig.me || echo "无法获取公网IP")
+
+# 检查是否成功获取 IP
+if [[ "$PUBLIC_IP" == "无法获取公网IP" ]]; then
+  echo "错误：无法获取公网 IP 地址，无法生成链接。"
+else
+  # 生成 Base64 部分 (移除可能存在的换行符)
+  BASE64_PART=$(echo -n "${SS_METHOD}:${SS_PASSWORD}" | base64)
+  # 生成并输出链接 (使用脚本默认的 tag)
+  SS_LINK="ss://${BASE64_PART}@${PUBLIC_IP}:${SS_PORT}#shadowsocks_rust"
+  echo "您的 Shadowsocks 链接是:"
+  echo $SS_LINK
+fi
+```
+将以上整段命令复制粘贴到服务器终端运行即可。
+
+---
+
 ## 系统优化
 
 脚本会自动启用以下网络优化：
@@ -147,7 +180,7 @@ lsmod | grep bbr
 ## 注意事项
 
 - 请确保系统为 **Ubuntu 20.04** 或更高版本。
-- 需要 `curl`、`build-essential`、`pkg-config`、`libssl-dev` 等工具，脚本会自动尝试安装。
+- 需要 `curl`、`build-essential`、`pkg-config`、`libssl-dev`、`jq` 等工具，脚本会自动尝试安装部分依赖，`jq` 可能需要手动安装。
 - 脚本将修改系统的网络参数 (`/etc/sysctl.conf`) 以启用 BBR。
 - 脚本会尝试通过 `https://api.ipify.org` 或 `ifconfig.me` 获取公网 IP 以生成 `ss://` 链接。如果服务器无法访问这些服务，链接将无法生成。
 
