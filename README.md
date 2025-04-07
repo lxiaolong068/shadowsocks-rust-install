@@ -18,19 +18,19 @@
 
 ### 一键运行脚本
 ```bash
-bash <(curl -sSL https://raw.githubusercontent.com/sunnfun-0/shadowsocks-rust-install/main/shadowsocks-rust-install.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/lxiaolong068/shadowsocks-rust-install/main/shadowsocks-rust-install.sh)
 ```
 
 ### 1. 下载脚本
 克隆仓库到本地：
 ```bash
-git clone https://github.com/sunnfun-0/shadowsocks-rust-install.git
+git clone https://github.com/lxiaolong068/shadowsocks-rust-install.git
 cd shadowsocks-rust-install
 ```
 
 或直接下载脚本：
 ```bash
-wget https://raw.githubusercontent.com/sunnfun-0/shadowsocks-rust-install/main/shadowsocks-rust-install.sh
+wget https://raw.githubusercontent.com/lxiaolong068/shadowsocks-rust-install/main/shadowsocks-rust-install.sh
 ```
 
 ### 2. 赋予执行权限
